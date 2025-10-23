@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CONSULTATION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_MODULE_CODE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
@@ -10,8 +11,10 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDENT_ID;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,6 +22,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.consultation.Consultation;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,7 +39,7 @@ public class EditCommandParser implements Parser<EditCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG,
-                    PREFIX_STUDENT_ID, PREFIX_MODULE_CODE);
+                    PREFIX_STUDENT_ID, PREFIX_MODULE_CODE, PREFIX_CONSULTATION);
 
         Index index;
 
@@ -68,6 +72,13 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (!argMultimap.getAllValues(PREFIX_MODULE_CODE).isEmpty()) {
             editPersonDescriptor.setModuleCodes(ParserUtil.parseModuleCodes(
                     argMultimap.getAllValues(PREFIX_MODULE_CODE)));
+        }
+        if (argMultimap.getValue(PREFIX_CONSULTATION).isPresent()) {
+            List<Consultation> consultations = new ArrayList<>();
+            for (String consultationString : argMultimap.getAllValues(PREFIX_CONSULTATION)) {
+                consultations.add(new Consultation(ParserUtil.parseDateTime(consultationString)));
+            }
+            editPersonDescriptor.setConsultations(consultations);
         }
         parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);
 

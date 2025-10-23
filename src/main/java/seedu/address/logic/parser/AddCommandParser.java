@@ -1,17 +1,22 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CONSULTATION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_MODULE_CODE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDENT_ID;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.consultation.Consultation;
 import seedu.address.model.module.ModuleCode;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -32,7 +37,7 @@ public class AddCommandParser implements Parser<AddCommand> {
     public AddCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDENT_ID,
-                        PREFIX_EMAIL, PREFIX_MODULE_CODE, PREFIX_TAG);
+                        PREFIX_EMAIL, PREFIX_MODULE_CODE, PREFIX_TAG, PREFIX_CONSULTATION);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_STUDENT_ID,
                 PREFIX_EMAIL, PREFIX_MODULE_CODE)
@@ -48,7 +53,19 @@ public class AddCommandParser implements Parser<AddCommand> {
         Set<ModuleCode> moduleCodeList = ParserUtil.parseModuleCodes(argMultimap.getAllValues(PREFIX_MODULE_CODE));
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        Person person = new Person(name, studentId, email, moduleCodeList, tagList);
+        List<Consultation> consultationList = new ArrayList<>();
+        if (argMultimap.getValue(PREFIX_CONSULTATION).isPresent()) {
+            for (String consultationString : argMultimap.getAllValues(PREFIX_CONSULTATION)) {
+                consultationList.add(new Consultation(ParserUtil.parseDateTime(consultationString)));
+            }
+        }
+
+        Person person;
+        if (consultationList.isEmpty()) {
+            person = new Person(name, studentId, email, moduleCodeList, tagList, new HashSet<>());
+        } else {
+            person = new Person(name, studentId, email, moduleCodeList, tagList, new HashSet<>(), consultationList);
+        }
 
         return new AddCommand(person);
     }

@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CONSULTATION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_MODULE_CODE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
@@ -23,6 +24,8 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.consultation.Consultation;
+import seedu.address.model.grade.Grade;
 import seedu.address.model.module.ModuleCode;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -50,6 +53,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_STUDENT_ID + "STUDENT ID] "
             + "[" + PREFIX_MODULE_CODE + "MODULE CODE] "
             + "[" + PREFIX_TAG + "TAG]...\n"
+            + "[" + PREFIX_CONSULTATION + "CONSULTATION]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
@@ -109,15 +113,19 @@ public class EditCommand extends Command {
         Set<ModuleCode> updatedModuleCodes = editPersonDescriptor.getModuleCodes()
                     .orElse(personToEdit.getModuleCodes());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        List<Consultation> updatedConsultations =
+                editPersonDescriptor.getConsultations().orElse(personToEdit.getConsultations());
+        Set<Grade> updatedGrades = personToEdit.getGrades(); // Keep existing grades when editing
 
         // Check if this is a student (has studentId but no phone/address)
         if (updatedStudentId != null && updatedPhone == null && updatedAddress == null) {
             // Use student constructor
-            return new Person(updatedName, updatedStudentId, updatedEmail, updatedModuleCodes, updatedTags);
+            return new Person(updatedName, updatedStudentId,
+                    updatedEmail, updatedModuleCodes, updatedTags, updatedGrades, updatedConsultations);
         } else {
             // Use regular person constructor
             return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags,
-                    updatedStudentId, updatedModuleCodes);
+                    updatedStudentId, updatedModuleCodes, updatedGrades);
         }
     }
 
@@ -157,6 +165,7 @@ public class EditCommand extends Command {
         private StudentId studentId;
         private Set<ModuleCode> moduleCodes;
         private Set<Tag> tags;
+        private List<Consultation> consultations;
 
         public EditPersonDescriptor() {}
 
@@ -172,13 +181,15 @@ public class EditCommand extends Command {
             setTags(toCopy.tags);
             setStudentId(toCopy.studentId);
             setModuleCodes(toCopy.moduleCodes);
+            setConsultations(toCopy.consultations);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags, studentId, moduleCodes);
+            return CollectionUtil.isAnyNonNull(
+                    name, phone, email, address, tags, studentId, moduleCodes, consultations);
         }
 
         public void setName(Name name) {
@@ -244,6 +255,14 @@ public class EditCommand extends Command {
          */
         public Optional<Set<Tag>> getTags() {
             return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags)) : Optional.empty();
+        }
+
+        public Optional<List<Consultation>> getConsultations() {
+            return Optional.ofNullable(consultations);
+        }
+
+        public void setConsultations(List<Consultation> consultations) {
+            this.consultations = consultations;
         }
 
         @Override

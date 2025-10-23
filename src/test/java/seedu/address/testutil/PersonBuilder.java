@@ -3,6 +3,7 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
+import seedu.address.model.grade.Grade;
 import seedu.address.model.module.ModuleCode;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -31,6 +32,7 @@ public class PersonBuilder {
     private Set<Tag> tags;
     private StudentId studentId;
     private Set<ModuleCode> moduleCodes;
+    private Set<Grade> grades;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -43,6 +45,7 @@ public class PersonBuilder {
         tags = new HashSet<>();
         studentId = null;
         moduleCodes = new HashSet<>();
+        grades = new HashSet<>();
     }
 
     /**
@@ -56,6 +59,7 @@ public class PersonBuilder {
         tags = new HashSet<>(personToCopy.getTags());
         studentId = personToCopy.getStudentId();
         moduleCodes = new HashSet<>(personToCopy.getModuleCodes());
+        grades = new HashSet<>(personToCopy.getGrades());
     }
 
     /**
@@ -144,17 +148,25 @@ public class PersonBuilder {
     }
 
     /**
+     * Sets the {@code Grades} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withGrades(String... grades) {
+        this.grades = SampleDataUtil.getGradeSet(grades);
+        return this;
+    }
+
+    /**
      * Builds a {@code Person} from the current builder state.
      * Uses the appropriate constructor based on which fields are set.
      */
     public Person build() {
         // If studentId is set but phone or address is null, build as a student (without phone/address)
         if (studentId != null && (phone == null || address == null)) {
-            return new Person(name, studentId, email, moduleCodes, tags);
+            return new Person(name, studentId, email, moduleCodes, tags, grades);
         }
         // If both phone and address are set, use the full constructor
         if (phone != null && address != null) {
-            return new Person(name, phone, email, address, tags, studentId, moduleCodes);
+            return new Person(name, phone, email, address, tags, studentId, moduleCodes, grades);
         }
         // Default: build without studentId and moduleCodes
         return new Person(name, phone, email, address, tags);

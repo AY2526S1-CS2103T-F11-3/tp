@@ -350,3 +350,28 @@
     -fx-background-radius: 2;
     -fx-font-size: 11;
 }
+
+#grades {
+    -fx-hgap: 7;
+    -fx-vgap: 3;
+}
+
+#grades .label {
+    -fx-text-fill: white;
+    -fx-background-color: #7b3e91;
+    -fx-padding: 2 5 2 5;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-font-size: 10;
+    -fx-font-family: "Segoe UI Semibold";
+}
+
+.grade-label {
+    -fx-text-fill: white;
+    -fx-background-color: #7b3e91;
+    -fx-padding: 2 5 2 5;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-font-size: 10;
+    -fx-font-family: "Segoe UI Semibold";
+}
