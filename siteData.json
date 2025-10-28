@@ -122,6 +122,7 @@
         "adding-tags-to-a-student-tag": "Adding tags to a student : tag",
         "removing-tags-from-a-student-untag": "Removing tags from a student : untag",
         "adding-grades-to-a-student-grade": "Adding grades to a student : grade",
+        "adding-remarks-to-a-student-remark": "Adding remarks to a student : remark",
         "locating-students-by-name-find": "Locating students by name: find",
         "filtering-students-by-tags-filter": "Filtering students by tags: filter",
         "deleting-a-student-delete": "Deleting a student : delete",
