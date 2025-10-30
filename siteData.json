@@ -54,6 +54,7 @@
         "view-student-feature": "View Student Feature",
         "attendance-tracking-feature": "Attendance Tracking Feature",
         "grade-feature": "Grade Feature",
+        "delete-grade-feature": "Delete Grade Feature",
         "consultation-feature": "Consultation Feature",
         "remark-feature": "Remark Feature",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
@@ -67,6 +68,7 @@
         "launch-and-shutdown": "Launch and shutdown",
         "deleting-a-person": "Deleting a person",
         "adding-a-remark-to-a-student": "Adding a remark to a student",
+        "adding-and-deleting-grades": "Adding and deleting grades",
         "saving-data": "Saving data"
       },
       "headingKeywords": {}
